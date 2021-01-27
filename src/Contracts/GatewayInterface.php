@@ -20,7 +20,7 @@ interface GatewayInterface
      * @param string $text
      * @param SpeechInterface $speech
      * @param array $config
-     * @return array
+     * @return mixed
      */
-    public function to(string $text, SpeechInterface $speech, array $config) :array;
+    public function to(string $text, SpeechInterface $speech, array $config);
 }

@@ -13,5 +13,12 @@
         "psr-4": {
             "Hipig\\LaravelTts\\": "src"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hipig\\LaravelTts\\TtsServiceProvider"
+            ]
+        }
     }
 }

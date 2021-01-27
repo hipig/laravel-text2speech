@@ -2,6 +2,7 @@
 
 namespace Hipig\LaravelTts;
 
+use Closure;
 use Hipig\LaravelTts\Contracts\GatewayInterface;
 use Hipig\LaravelTts\Contracts\SpeechInterface;
 use Hipig\LaravelTts\Contracts\StrategyInterface;
@@ -20,11 +21,6 @@ class Tts
     const STATUS_FAILURE = 'failure';
 
     /**
-     * @var string
-     */
-    protected $defaultGateway;
-
-    /**
      * @var array
      */
     protected $customGateways;
@@ -39,6 +35,16 @@ class Tts
      */
     protected $strategies = [];
 
+    /**
+     * Text to speech.
+     *
+     * @param string $text
+     * @param SpeechInterface|array $speech
+     * @param array $gateways
+     * @return array
+     * @throws NoGatewayAvailableException
+     * @throws InvalidArgumentException
+     */
     public function to(string $text, $speech, array $gateways = [])
     {
         $speech = $this->buildSpeech($speech);
@@ -51,6 +57,15 @@ class Tts
         return $this->toSpeech($text, $speech, $this->buildGateways($gateways));
     }
 
+    /**
+     * To speech.
+     *
+     * @param $text
+     * @param SpeechInterface $speed
+     * @param array $gateways
+     * @return array
+     * @throws NoGatewayAvailableException
+     */
     protected function toSpeech($text, SpeechInterface $speed, array $gateways = [])
     {
         $results = [];
@@ -116,6 +131,13 @@ class Tts
         }
 
         return $this->strategies[$strategy];
+    }
+
+    public function extend($name, Closure $callback)
+    {
+        $this->customGateways[$name] = $callback;
+
+        return $this;
     }
 
     protected function createGateway($name)
