@@ -14,7 +14,7 @@ class XfyunGateway extends Gateway
 
     const REQUEST_LINE = 'GET /v2/tts HTTP/1.1';
 
-    const SUCCESS_FLAG = 2;
+    const SUCCESS_FLAG = 0;
 
     /**
      * Text to speech.
@@ -43,9 +43,9 @@ class XfyunGateway extends Gateway
         ];
 
         $business = [
-            'speed' => intval($speech->getSpd()) ?? 50,
-            'volume' => intval($speech->getVol()) ?? 50,
-            'pitch' => intval($speech->getPit()) ?? 50,
+            'speed' => $speech->getSpd() ?? 50,
+            'volume' => $speech->getVol() ?? 50,
+            'pitch' => $speech->getPit() ?? 50,
             'vcn' => $speech->getPer(), //发音人
             'aue' => $speech->getAue() ?? 'lame',
             'tte' => "UTF8"
@@ -59,9 +59,25 @@ class XfyunGateway extends Gateway
             'status' => 2
         ];
 
-        $result = $this->send($endpointUrl, compact('common', 'business', 'data'));
+        $client = $this->send($endpointUrl, compact('common', 'business', 'data'));
 
-        if ($result->data->status !== self::SUCCESS_FLAG) {
+        while (true) {
+            try {
+                $result = json_decode($client->receive(), true);
+                switch ($result->data->status) {
+                    case 1:
+                        $result->data->audio .= base64_decode($result->data->audio);
+                        break;
+                    case 2:
+                        $result->data->audio .= base64_decode($result->data->audio);
+                        break 2;
+                }
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
+
+        if ($result->code !== self::SUCCESS_FLAG) {
             throw new GatewayErrorException($result->message, $result->code, $result);
         }
 

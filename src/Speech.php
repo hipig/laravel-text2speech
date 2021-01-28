@@ -53,9 +53,9 @@ class Speech implements SpeechInterface
     /**
      * Get speed.
      *
-     * @return string
+     * @return string|null
      */
-    public function getSpd(): string
+    public function getSpd()
     {
         return $this->spd;
     }
@@ -63,9 +63,9 @@ class Speech implements SpeechInterface
     /**
      * Get pitch.
      *
-     * @return string
+     * @return string|null
      */
-    public function getPit(): string
+    public function getPit()
     {
         return $this->pit;
     }
@@ -73,9 +73,9 @@ class Speech implements SpeechInterface
     /**
      * Get volume.
      *
-     * @return string
+     * @return string|null
      */
-    public function getVol(): string
+    public function getVol()
     {
         return $this->vol;
     }
@@ -85,7 +85,7 @@ class Speech implements SpeechInterface
      *
      * @return string
      */
-    public function getPer(): string
+    public function getPer()
     {
         return $this->per;
     }
@@ -93,9 +93,9 @@ class Speech implements SpeechInterface
     /**
      * Get aue.
      *
-     * @return string
+     * @return string|null
      */
-    public function getAue(): string
+    public function getAue()
     {
         return $this->aue;
     }

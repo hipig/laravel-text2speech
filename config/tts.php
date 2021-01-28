@@ -15,9 +15,9 @@ return [
     // 可用的网关配置
     'gateways' => [
         'xfyun' => [
-            'app_id' => '',
-            'api_key' => '',
-            'api_secret' => '',
+            'app_id' => env('XFYUN_TTS_APP_ID'),
+            'api_key' => env('XFYUN_TTS_API_KEY'),
+            'api_secret' => env('XFYUN_TTS_API_SECRET'),
         ],
         //...
     ],

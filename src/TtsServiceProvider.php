@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Hipig\LaravelTts;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -15,7 +15,7 @@ class TtsServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/tts.php' => config_path('tts.php'),
-        ]);
+        ], 'config');
     }
 
     /**
@@ -25,6 +25,12 @@ class TtsServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton(Tts::class, function ($app) {
+            return new Tts();
+        });
+
+        $this->app->alias(Tts::class, 'tts');
+
         $this->mergeConfigFrom(
             __DIR__.'/../config/tts.php',
             'tts'

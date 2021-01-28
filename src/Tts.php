@@ -76,7 +76,7 @@ class Tts
                 $results[$gateway] = [
                     'gateway' => $gateway,
                     'status' => self::STATUS_SUCCESS,
-                    'result' => $this->gateway($gateway)->send($text, $speed, $config),
+                    'result' => $this->gateway($gateway)->to($text, $speed, $config),
                 ];
                 $isSuccessful = true;
 
@@ -103,6 +103,13 @@ class Tts
         return $results;
     }
 
+    /**
+     * Get gateway.
+     *
+     * @param $name
+     * @return GatewayInterface|mixed
+     * @throws InvalidArgumentException
+     */
     public function gateway($name)
     {
         if (!isset($this->gateways[$name])) {
@@ -112,6 +119,13 @@ class Tts
         return $this->gateways[$name];
     }
 
+    /**
+     * Get strategy.
+     *
+     * @param null $strategy
+     * @return StrategyInterface|mixed
+     * @throws InvalidArgumentException
+     */
     public function strategy($strategy = null)
     {
         if (\is_null($strategy)) {
@@ -133,6 +147,13 @@ class Tts
         return $this->strategies[$strategy];
     }
 
+    /**
+     * Extend gateway.
+     *
+     * @param $name
+     * @param Closure $callback
+     * @return $this
+     */
     public function extend($name, Closure $callback)
     {
         $this->customGateways[$name] = $callback;
@@ -140,6 +161,13 @@ class Tts
         return $this;
     }
 
+    /**
+     * Create gateway.
+     *
+     * @param $name
+     * @return GatewayInterface
+     * @throws InvalidArgumentException
+     */
     protected function createGateway($name)
     {
         $config = config("tts.gateways.{$name}", []);
@@ -164,6 +192,14 @@ class Tts
         return $gateway;
     }
 
+    /**
+     * Make gateway.
+     *
+     * @param $gateway
+     * @param $config
+     * @return GatewayInterface
+     * @throws InvalidArgumentException
+     */
     protected function makeGateway($gateway, $config)
     {
         if (!\class_exists($gateway) || !\in_array(GatewayInterface::class, \class_implements($gateway))) {
@@ -173,6 +209,12 @@ class Tts
         return new $gateway($config);
     }
 
+    /**
+     * Format gateway class name.
+     *
+     * @param $name
+     * @return string
+     */
     protected function formatGatewayClassName($name)
     {
         if (\class_exists($name) && \in_array(GatewayInterface::class, \class_implements($name))) {
@@ -184,11 +226,24 @@ class Tts
         return __NAMESPACE__."\\Gateways\\{$name}Gateway";
     }
 
+    /**
+     * Call custom gateway.
+     *
+     * @param $gateway
+     * @param $config
+     * @return false|mixed
+     */
     protected function callCustomGateway($gateway, $config)
     {
         return \call_user_func($this->customGateways[$gateway], $config);
     }
 
+    /**
+     * Build speech.
+     *
+     * @param $speed
+     * @return SpeechInterface|Speech|mixed
+     */
     protected function buildSpeech($speed)
     {
         if (!($speed instanceof SpeechInterface)) {
@@ -198,6 +253,13 @@ class Tts
         return $speed;
     }
 
+    /**
+     * Build gateways.
+     *
+     * @param array $gateways
+     * @return array
+     * @throws InvalidArgumentException
+     */
     protected function buildGateways(array $gateways)
     {
         $formatted = [];

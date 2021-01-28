@@ -10,37 +10,37 @@ interface SpeechInterface
     /**
      * Get speed.
      *
-     * @return string
+     * @return string|null
      */
-    public function getSpd() :string;
+    public function getSpd();
 
     /**
      * Get pitch.
      *
-     * @return string
+     * @return string|null
      */
-    public function getPit() :string;
+    public function getPit();
 
     /**
      * Get volume.
      *
-     * @return string
+     * @return string|null
      */
-    public function getVol() :string;
+    public function getVol();
 
     /**
      * Get per.
      *
      * @return string
      */
-    public function getPer() :string;
+    public function getPer();
 
     /**
      * Get aue.
      *
-     * @return string
+     * @return string|null
      */
-    public function getAue() :string;
+    public function getAue();
 
     /**
      * Set speed.

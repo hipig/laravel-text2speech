@@ -11,7 +11,7 @@ trait HasWebsocketRequest
      *
      * @param $endpoint
      * @param $data
-     * @return mixed|\WebSocket\Message\Message|null
+     * @return Client
      * @throws \WebSocket\BadOpcodeException
      */
     protected function send($endpoint, $data)
@@ -19,7 +19,7 @@ trait HasWebsocketRequest
         $client = $this->getClient($endpoint);
         $client->send(json_encode($data));
 
-        return $this->receive($client);
+        return $client;
     }
 
     /**
@@ -57,15 +57,13 @@ trait HasWebsocketRequest
      */
     protected function receive(Client $client)
     {
-        $result = '';
         while (true) {
             try {
                 $result = $client->receive();
+                return json_decode($result);
             } catch (\Exception $e) {
                 throw $e;
             }
         }
-        $client->close();
-        return json_decode($result);
     }
 }
